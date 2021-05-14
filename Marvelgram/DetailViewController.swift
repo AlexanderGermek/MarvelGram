@@ -140,7 +140,7 @@ class DetailViewController: UIViewController {
 
             //descriptionLabel:-----------------------------------------------------------
             descriptionLabel.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 20),
-            descriptionLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 5),
+            descriptionLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 10),
             descriptionLabel.widthAnchor.constraint(equalTo: scrollView.widthAnchor, constant: -40),
 
             //exploreMoreLabel:-----------------------------------------------------------

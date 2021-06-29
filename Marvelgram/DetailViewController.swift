@@ -7,6 +7,7 @@
 
 import UIKit
 import SDWebImage
+import SnapKit
 
 class DetailViewController: UIViewController {
     
@@ -17,14 +18,12 @@ class DetailViewController: UIViewController {
     private let scrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.layer.masksToBounds = true
-        scrollView.translatesAutoresizingMaskIntoConstraints = false
         return scrollView
     }()
     
     private let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.layer.masksToBounds = true
-        imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
     
@@ -34,13 +33,11 @@ class DetailViewController: UIViewController {
         label.numberOfLines = 0
         label.lineBreakMode = .byWordWrapping
         label.font = .systemFont(ofSize: 16)
-        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
     private var exploreMoreLabel: UILabel = {
         let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "Explore more"
         label.textColor = .label
         label.numberOfLines = 1
@@ -106,7 +103,7 @@ class DetailViewController: UIViewController {
         layout.minimumLineSpacing = 20
         layout.minimumInteritemSpacing = 1
         layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 1, right: 10)
-        let size = (view.frame.width / 3) - 2
+        let size = (view.frame.width / 3) - 5
         layout.itemSize = CGSize(width: size, height: size)
         
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
@@ -126,36 +123,41 @@ class DetailViewController: UIViewController {
         
         let sizeWithoutImage = view.height - view.width - view.safeAreaInsets.bottom
         
-        NSLayoutConstraint.activate([
-            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            scrollView.topAnchor.constraint(equalTo: view.topAnchor),
-            scrollView.widthAnchor.constraint(equalTo: view.widthAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-
-            //imageView:-----------------------------------------------------------
-            imageView.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor),
-            imageView.topAnchor.constraint(equalTo: scrollView.topAnchor),
-            imageView.widthAnchor.constraint(equalToConstant: view.width),
-            imageView.heightAnchor.constraint(equalToConstant: view.width),
-
-            //descriptionLabel:-----------------------------------------------------------
-            descriptionLabel.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 20),
-            descriptionLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 10),
-            descriptionLabel.widthAnchor.constraint(equalTo: scrollView.widthAnchor, constant: -40),
-
-            //exploreMoreLabel:-----------------------------------------------------------
-            exploreMoreLabel.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 20),
-            exploreMoreLabel.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 5),
-            exploreMoreLabel.widthAnchor.constraint(equalTo: scrollView.widthAnchor, constant: -40),
-            exploreMoreLabel.heightAnchor.constraint(equalToConstant: 40),
-
-            //CollectionView:-----------------------------------------------------------
-            collectionView!.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 20),
-            collectionView!.topAnchor.constraint(equalTo: exploreMoreLabel.bottomAnchor, constant: 5),
-            collectionView!.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
-            collectionView!.heightAnchor.constraint(equalToConstant: sizeWithoutImage / 2.0 - 20),
-            collectionView!.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor)
-        ])
+        //scroll view:-----------------------------------------------------------
+        scrollView.snp.makeConstraints { (maker) in
+            maker.leading.trailing.width.height.equalToSuperview()
+        }
+        
+        //imageView:-----------------------------------------------------------
+        imageView.snp.makeConstraints { (maker) in
+            maker.centerX.equalTo(scrollView.snp.centerX)
+            maker.top.equalTo(scrollView.snp.top)
+            maker.width.height.equalTo(view.width)
+        }
+        
+        //descriptionLabel:-----------------------------------------------------------
+        descriptionLabel.snp.makeConstraints { (maker) in
+            maker.leading.equalTo(scrollView.snp.leading).offset(20)
+            maker.top.equalTo(imageView.snp.bottom).offset(10)
+            maker.width.equalTo(scrollView.snp.width).offset(-40)
+        }
+        
+        //exploreMoreLabel:-----------------------------------------------------------
+        exploreMoreLabel.snp.makeConstraints { (maker) in
+            maker.leading.equalTo(scrollView.snp.leading).offset(20)
+            maker.top.equalTo(descriptionLabel.snp.bottom).offset(5)
+            maker.width.equalTo(scrollView.snp.width).offset(-40)
+            maker.height.equalTo(40)
+        }
+        
+        //collectionView:-------------------------------------------------------------
+        collectionView!.snp.makeConstraints { (maker) in
+            maker.leading.equalTo(scrollView.snp.leading).offset(20)
+            maker.top.equalTo(exploreMoreLabel.snp.bottom).offset(5)
+            maker.width.equalTo(scrollView.snp.width)
+            maker.height.equalTo(sizeWithoutImage / 2.0 - 20)
+            maker.bottom.equalTo(scrollView.snp.bottom)
+        }
     }
     
     

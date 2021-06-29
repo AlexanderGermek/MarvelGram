@@ -8,6 +8,7 @@
 import UIKit
 import SDWebImage
 import Speech
+import SnapKit
 
 class MarvelViewController: UIViewController, UIGestureRecognizerDelegate {
     
@@ -97,16 +98,22 @@ class MarvelViewController: UIViewController, UIGestureRecognizerDelegate {
         
         let yForCV = view.safeAreaInsets.top
         
-        collectionView?.frame = CGRect(x: 0,
-                                       y: yForCV,
-                                       width:  view.width,
-                                       height: view.height - yForCV)
+        collectionView?.snp.makeConstraints({ (maker) in
+            maker.leading.equalToSuperview()
+            maker.top.equalTo(view.snp_topMargin)
+            maker.width.equalToSuperview()
+            maker.height.equalTo(view.height - yForCV)
+        })
         
-        stopRecordImageView.frame = CGRect(x: 0, y: 0, width: 100, height: 100)
-        stopRecordImageView.center = view.center
+        stopRecordImageView.snp.makeConstraints { (maker) in
+            maker.width.height.equalTo(100)
+            maker.center.equalToSuperview()
+        }
         
-        spinner.frame = CGRect(x: 0, y: 0, width: 100, height: 100)
-        spinner.center = view.center
+        spinner.snp.makeConstraints { (maker) in
+            maker.width.height.equalTo(100)
+            maker.center.equalToSuperview()
+        }
     }
     
     //MARK: - Configure from viewDidLoad
@@ -177,16 +184,21 @@ class MarvelViewController: UIViewController, UIGestureRecognizerDelegate {
     //MARK: - Get heroes from server
     func getHeroes() {
         
-        getMarvelHeroes { (heroes) in
-            self.heroes = heroes
-            self.nativeHeroes = heroes
-            
-            DispatchQueue.main.async {
-                self.spinner.stopAnimating()
-                self.searchController.searchBar.isHidden = false
-                self.collectionView?.reloadData()
+        let queue = DispatchQueue.global(qos: .utility)
+       
+        queue.async { 
+            getMarvelHeroes { [weak self] (heroes) in
+                self?.heroes = heroes
+                self?.nativeHeroes = heroes
+                
+                DispatchQueue.main.async {
+                    self?.spinner.stopAnimating()
+                    self?.searchController.searchBar.isHidden = false
+                    self?.collectionView?.reloadData()
+                }
             }
         }
+        
     }
 }
 

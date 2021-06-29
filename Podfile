@@ -7,5 +7,6 @@ target 'Marvelgram' do
 
   # Pods for Marvelgram
   pod 'SDWebImage'
+  pod 'SnapKit'
 
 end
